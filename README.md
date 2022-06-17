@@ -1,2 +1,3 @@
-# Stock-Tracker-Extension
-google extension to show stocks
+# Notepad-Extension
+
+Google Chrome extension that allows you to write notes.
