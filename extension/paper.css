@@ -1,0 +1,15 @@
+#note1 {
+    height: 300px;
+    width: 300px;
+    overflow: auto;
+    margin: 1px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: white;
+    border: 2px solid black;
+}
+html, body {
+    background-color: lightgray;
+    margin: 0;
+    padding: 0;
+}

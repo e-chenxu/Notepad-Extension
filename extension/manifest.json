@@ -1,0 +1,14 @@
+{
+  "name": "Notepad Extension",
+  "description": "A notepad",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background.service_worker": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
