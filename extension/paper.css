@@ -1,5 +1,31 @@
+* {
+    box-sizing: border-box;
+}
+
+/* Create two unequal columns that floats next to each other */
+.column {
+    float: left;
+    padding: 10px;
+    height: 300px; /* Should be removed. Only for demonstration */
+}
+
+.left {
+    width: 25%;
+}
+
+.right {
+    width: 75%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 #note1 {
-    height: 300px;
+    height: 200px;
     width: 300px;
     overflow: auto;
     margin: 1px;
@@ -7,6 +33,15 @@
     font-size: 16px;
     background-color: white;
     border: 2px solid black;
+}
+.canvas {
+    width: 500px;
+    height: 300px;
+    overflow: hidden;
+}
+.button{
+    width: 100px;
+    height: 100px;
 }
 html, body {
     background-color: lightgray;
