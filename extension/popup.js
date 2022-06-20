@@ -1,23 +1,45 @@
 // list of the notes that are saved
-var notelist = [];
+let notelist = [];
 // list of the buttons that correspond to each note
-var notebuttonlist = [];
+let notebuttonlist = [];
 // how many buttons were created
-var createdbuttons = 0;
+let createdbuttons = 0;
 
-var notepad = undefined;
+// current notepad
+let notepad = undefined;
 
+let leftcolumn = document.getElementById('notelist');
+let rightcolumn = document.getElementById('notebox');
+let addbutton = document.getElementById('addbutton');
 
 // grab saved data
-chrome.storage.local.get(['notelist','notebuttonlist'], function (data) {
-  //  notepad.innerHTML = data.notepad;
+/*chrome.storage.local.get(['notelist_saved','notebuttonlist_saved'], function (saveddata) {
+    // get the saved buttons
+    notebuttonlist = JSON.parse(saveddata.notebuttonlist_saved);
+    for (let i = 0; i < notebuttonlist.length; i++){
+        let button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'button';
+        button.id = notebuttonlist[i];
+        button.innerHTML = button.id;
+        leftcolumn.insertBefore(button,addbutton);
+    }
+    // set initial notepad, button 1
 
-});
+
+
+    // saved notes?
+    notelist = JSON.parse(saveddata.notelist_saved);
+  //  notepad.innerHTML = data.notepad;
+   // notepad. =
+
+});*/
 
 if (notepad){
     // event listener for whenever key is typed
     notepad.addEventListener('keyup', function (event) {
         chrome.storage.local.set({notepad: event.target.innerHTML}, () => {
+            // save to specific notepad
             console.log("Notepad updated with", event.target.innerHTML);
         });
     });
@@ -25,45 +47,84 @@ if (notepad){
 
 document.addEventListener('click',function(e){
     if(e.target && e.target.id === 'addnote'){
-        // create a new button, along with a note that corresponds to it , internal id should be like note1 and notebutton1
-        var button = document.createElement('button');
+        // create a new button, along with a delete that corresponds to it inside a new corresponding div
+        let newdiv = document.createElement('div');
+        newdiv.type = 'div';
+        newdiv.id = createdbuttons;
+        newdiv.className = 'totalbutton';
+        leftcolumn.insertBefore(newdiv,addbutton);
+
+        // add the id of the new button
+        notebuttonlist.push(newdiv.id);
+
+        // new button
+        let button = document.createElement('button');
         button.type = 'button';
         button.className = 'button';
-        button.id = 'notebutton' + createdbuttons;
-        button.innerHTML = button.id;
+        button.id = createdbuttons + 'b';
+        button.innerHTML = button.id + "ruh";
+        newdiv.appendChild(button);
 
-        var leftcolumn = document.getElementById('notelist');
-        leftcolumn.insertBefore(button,e.target);
-        notebuttonlist.push(button);
+        // new delete
+        let deletebut = document.createElement('button');
+        deletebut.type = 'button';
+        deletebut.className = 'deletebut';
+        deletebut.id = createdbuttons + 'd';
+        deletebut.innerHTML = '-';
+        newdiv.appendChild(deletebut);
 
-        // create note
-        var note = document.createElement('div');
+        // create corresponding note
+        let note = document.createElement('div');
         note.className = 'note';
-        note.id = 'note' + createdbuttons;
+        note.id = createdbuttons;
         note.innerHTML = note.id;
         // if notepad exists, replace it
         if (notepad) {
-            var rightcolumn = document.getElementById('notebox');
             rightcolumn.replaceChild(note, notepad);
         }
         // otherwise just add it to the blank thing
         else {
-            var rightcolumn = document.getElementById('notebox');
             rightcolumn.appendChild(note);
         }
         notepad = note;
-        notelist.push(note);
+
+        let note_object = {
+            name: note.id,
+            notetext: note.id
+        }
+        notelist.push(note_object);
+
+        // save new note
+        chrome.storage.local.set({notelist_saved: JSON.stringify(notelist), notebuttonlist_saved: JSON.stringify(notebuttonlist)}, () => {
+            // save to specific notepad
+            console.log("saved");
+        });
 
         createdbuttons++;
 
     }
-    else if(e.target && e.target.id === 'add'){
-        var button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'button';
-        button.innerHTML = 'added note';
-        var column = document.getElementById('notelist');
-        column.insertBefore(button,e.target);
+    // if click on note button, then show the corresponding note
+    else if(e.target && e.target.className === 'button'){
+        // get the notelist
+        chrome.storage.local.get(['notelist_saved','notebuttonlist_saved'], function (saveddata) {
+            notelist = JSON.parse(saveddata.notelist_saved);
+        });
+        // find the note that corresponds to the button id
+        let notehtml = notelist[notelist.findIndex(x => x.name === e.target.id)].notetext;
+        let note = document.createElement('div');
+        note.className = 'note';
+        note.id = e.target.id;
+        note.innerHTML = notehtml;
+        // replace the current note with the new note
+        // if notepad exists, replace it
+        if (notepad) {
+            rightcolumn.replaceChild(note, notepad);
+        }
+        // otherwise just add it to the blank thing
+        else {
+            rightcolumn.appendChild(note);
+        }
+        notepad = note;
     }
 });
 

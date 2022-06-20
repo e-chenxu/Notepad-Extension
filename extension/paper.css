@@ -4,10 +4,20 @@
 
 /* Create two unequal columns that floats next to each other */
 .column {
+    font-size: 0;
     float: left;
-    padding: 10px;
     height: 300px; /* Should be removed. Only for demonstration */
     overflow-y: scroll;
+    overflow-x: hidden;
+    margin: 0px;
+}
+
+.totalbutton {
+    display: flex;
+    font-size: 0;
+    float: left;
+    margin: 0px;
+    width:100%;
 }
 
 .left {
@@ -15,6 +25,7 @@
 }
 
 .right {
+    overflow-y: hidden;
     width: 75%;
 }
 
@@ -40,9 +51,25 @@
     height: 300px;
     overflow: hidden;
 }
+
+.inline {
+    display:inline-block;
+    margin-right:0px;
+}
+
 .button{
-    width: 100px;
+    border: none;
+    background: white;
+    width: 90%;
     height: 100px;
+    margin: 0px;
+}
+.deletebut{
+    border: none;
+    background: white;
+    width: 10%;
+    height: 100px;
+    margin: 0px;
 }
 html, body {
     background-color: lightgray;
