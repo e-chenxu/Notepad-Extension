@@ -6,7 +6,7 @@
 .column {
     font-size: 0;
     float: left;
-    height: 300px; /* Should be removed. Only for demonstration */
+    height: 500px; /* Should be removed. Only for demonstration */
     overflow-y: scroll;
     overflow-x: hidden;
     margin: 0px;
@@ -36,19 +36,36 @@
     clear: both;
 }
 
+.menubar{
+    position: relative;
+    height:27px;
+    width:100%;
+    background-color: #dcd67d;
+}
+
+.namebox{
+    margin-left: 30px;
+    margin-top: 5px;
+    background-color: white;
+    float: left;
+    width: 30%;
+    height: 70%;
+}
+
 .note {
-    height: 200px;
-    width: 300px;
+    height: 100%;
+    width: 100%;
     overflow: auto;
     margin: 1px;
     padding: 10px;
     font-size: 16px;
     background-color: white;
-    border: 2px solid black;
+    outline: none;
 }
 .canvas {
-    width: 500px;
-    height: 300px;
+
+    width: 700px;
+    height: 500px;
     overflow: hidden;
 }
 
@@ -70,6 +87,16 @@
     width: 10%;
     height: 100px;
     margin: 0px;
+}
+
+.deletebutton{
+    margin-right: 30px;
+    margin-top: 5px;
+    background-color: white;
+    float: right;
+    left: 50px;
+    width: 5%;
+    height: 70%;
 }
 html, body {
     background-color: lightgray;
