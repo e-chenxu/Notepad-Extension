@@ -40,7 +40,7 @@
     position: relative;
     height:27px;
     width:100%;
-    background-color: #dcd67d;
+    background-color: #d0d1de;
 }
 
 .namebox{
@@ -50,6 +50,9 @@
     float: left;
     width: 30%;
     height: 70%;
+    font-size: 16px;
+    outline: none;
+    overflow: hidden;
 }
 
 .note {
@@ -99,7 +102,7 @@
     height: 70%;
 }
 html, body {
-    background-color: lightgray;
+    background-color: #c7c5c5;
     margin: 0;
     padding: 0;
 }

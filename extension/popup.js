@@ -5,12 +5,13 @@ let notelist = [];
 // how many buttons were created
 let createdbuttons = 0;
 
-// current notepad
+// current notepad element
 let notepad = undefined;
 
 let leftcolumn = document.getElementById('notelist');
 let rightcolumn = document.getElementById('notebox');
 let addbutton = document.getElementById('addbutton');
+let namebox = document.getElementById('namebox');
 
 // initial get saved data
 chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (saveddata) {
@@ -20,7 +21,7 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (sa
             // create button, along with a delete that corresponds to it inside a new corresponding div
             let newdiv = document.createElement('div');
             newdiv.type = 'div';
-            newdiv.id = notelist[i].name;
+            newdiv.id = notelist[i].name + 'div';
             newdiv.className = 'totalbutton';
             leftcolumn.insertBefore(newdiv,addbutton);
 
@@ -29,7 +30,7 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (sa
             button.type = 'button';
             button.className = 'button';
             button.id = notelist[i].name + 'b';
-            button.innerHTML = button.id + "ruh";
+            button.innerHTML = notelist[i].displayname;
             newdiv.appendChild(button);
 
             // new delete
@@ -49,6 +50,8 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (sa
             note.contentEditable = 'true';
             rightcolumn.appendChild(note);
             notepad = note;
+            // namebox title
+            namebox.innerHTML = notelist[0].displayname;
         }
     }
     if (saveddata.createdbuttons_saved){
@@ -67,6 +70,17 @@ document.addEventListener('keyup', function (e) {
             notelist[noteindex].notetext = currenthtml;
             chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons}, () => {});
         }
+        else if (e.target && e.target.id === namebox.id){
+            // if changing the title in the namebox, we need to update the note display name and the button name
+            let currenthtml = e.target.innerHTML;
+            // match the id of the current notepad with the one inside notelist
+            let noteindex = notelist.findIndex(x => x.name === notepad.id);
+            notelist[noteindex].displayname = currenthtml;
+            // find button corresponding to note
+            let button = document.getElementById(notepad.id + 'b');
+            button.innerHTML = currenthtml;
+            chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons}, () => {});
+        }
 });
 
 document.addEventListener('click',function(e){
@@ -74,7 +88,7 @@ document.addEventListener('click',function(e){
         // create a new button, along with a delete that corresponds to it inside a new corresponding div
         let newdiv = document.createElement('div');
         newdiv.type = 'div';
-        newdiv.id = createdbuttons;
+        newdiv.id = createdbuttons + 'div';
         newdiv.className = 'totalbutton';
         leftcolumn.insertBefore(newdiv,addbutton);
 
@@ -86,7 +100,7 @@ document.addEventListener('click',function(e){
         button.type = 'button';
         button.className = 'button';
         button.id = createdbuttons + 'b';
-        button.innerHTML = button.id + "ruh";
+        button.innerHTML = 'New Note';
         newdiv.appendChild(button);
 
         // new delete
@@ -101,7 +115,6 @@ document.addEventListener('click',function(e){
         let note = document.createElement('div');
         note.className = 'note';
         note.id = createdbuttons;
-        note.innerHTML = note.id;
         note.contentEditable = 'true';
         // if notepad exists, replace it
         if (notepad) {
@@ -114,8 +127,10 @@ document.addEventListener('click',function(e){
         notepad = note;
 
         let note_object = {
+            displayname: 'New Note',
+            // basically the id or internal name, i didnt want to name it id because html is named id
             name: note.id,
-            notetext: note.id
+            notetext: ''
         }
         notelist.push(note_object);
         createdbuttons++;
@@ -136,6 +151,7 @@ document.addEventListener('click',function(e){
         let noteget = notelist[notelist.findIndex(x => (x.name + 'b') === e.target.id)];
         let notehtml = noteget.notetext;
         let notename = noteget.name;
+        namebox.innerHTML = noteget.displayname;
         let note = document.createElement('div');
         note.className = 'note';
         note.id = notename;
@@ -162,6 +178,23 @@ document.addEventListener('click',function(e){
         if (notepad) {
             rightcolumn.removeChild(notepad);
             notepad = undefined;
+        }
+    }
+    else if(e.target && notepad && e.target.className === 'deletebutton') {
+        // if click on delete button, find the current notepad being used and delete it
+        // also delete the button corresponding to the notepad
+        // savea  temporary id because we ar edeleting
+        let notepadid_temp = notepad.id;
+        let index = notelist.findIndex(x => (x.name) ===  notepad.id);
+        notelist.splice(index,1);
+        chrome.storage.local.set({notelist_saved: JSON.stringify(notelist),createdbuttons_saved: createdbuttons}, () => {});
+        if (notepad) {
+            rightcolumn.removeChild(notepad);
+            notepad = undefined;
+            // delete the left column button corresponding to the notepad
+            let div = document.getElementById(notepadid_temp + 'div');
+            div.remove();
+            namebox.innerHTML = '';
         }
     }
 });
