@@ -125,7 +125,7 @@ document.addEventListener('click',function(e){
             rightcolumn.appendChild(note);
         }
         notepad = note;
-
+        notepad.focus();
         let note_object = {
             displayname: 'New Note',
             // basically the id or internal name, i didnt want to name it id because html is named id
