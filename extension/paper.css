@@ -37,9 +37,11 @@
 }
 
 .menubar{
-    position: relative;
-    height:27px;
-    width:100%;
+    position: fixed;
+    top:0;
+    left:25%;
+    height:30px;
+    width:75%;
     background-color: #d0d1de;
 }
 
@@ -56,10 +58,11 @@
 }
 
 .note {
+    position: fixed;
     height: 100%;
     width: 100%;
-    overflow: auto;
-    margin: 1px;
+    overflow: scroll;
+    margin-top: 30px;
     padding: 10px;
     font-size: 16px;
     background-color: white;
@@ -93,13 +96,11 @@
 }
 
 .deletebutton{
-    margin-right: 30px;
-    margin-top: 5px;
     background-color: white;
+    margin: 5px;
     float: right;
-    left: 50px;
-    width: 5%;
-    height: 70%;
+    width: 30px;
+    height: 80%;
 }
 html, body {
     background-color: #c7c5c5;

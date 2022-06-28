@@ -112,6 +112,7 @@ document.addEventListener('click',function(e){
         newdiv.appendChild(deletebut);
 
         // create corresponding note
+        namebox.innerHTML = 'New Note';
         let note = document.createElement('div');
         note.className = 'note';
         note.id = createdbuttons;
