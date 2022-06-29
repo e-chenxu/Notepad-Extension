@@ -33,13 +33,13 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (sa
             button.innerHTML = notelist[i].displayname;
             newdiv.appendChild(button);
 
-            // new delete
+       /*     // new delete
             let deletebut = document.createElement('button');
             deletebut.type = 'button';
             deletebut.className = 'deletebut';
             deletebut.id = notelist[i].name + 'd';
             deletebut.innerHTML = '-';
-            newdiv.appendChild(deletebut);
+            newdiv.appendChild(deletebut);*/
         }
         if (notelist.length !== 0) {
         // initial notepad is the first one
@@ -103,13 +103,13 @@ document.addEventListener('click',function(e){
         button.innerHTML = 'New Note';
         newdiv.appendChild(button);
 
-        // new delete
+     /*   // new delete
         let deletebut = document.createElement('button');
         deletebut.type = 'button';
         deletebut.className = 'deletebut';
         deletebut.id = createdbuttons + 'd';
         deletebut.innerHTML = '-';
-        newdiv.appendChild(deletebut);
+        newdiv.appendChild(deletebut);*/
 
         // create corresponding note
         namebox.innerHTML = 'New Note';
@@ -169,7 +169,7 @@ document.addEventListener('click',function(e){
         }
         notepad = note;
     }
-    else if(e.target && e.target.className === 'deletebut'){
+   /* else if(e.target && e.target.className === 'deletebut'){
         // find the div that contains this and delete it
         e.target.parentNode.remove();
         // find the index of where the corresponding note is in the array
@@ -180,7 +180,7 @@ document.addEventListener('click',function(e){
             rightcolumn.removeChild(notepad);
             notepad = undefined;
         }
-    }
+    }*/
     else if(e.target && notepad && e.target.className === 'deletebutton') {
         // if click on delete button, find the current notepad being used and delete it
         // also delete the button corresponding to the notepad
