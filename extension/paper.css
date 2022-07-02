@@ -108,6 +108,7 @@ img {
 }
 
 .namebox{
+    color: grey;
     margin-left: 30px;
     margin-top: 5px;
     background-color: white;

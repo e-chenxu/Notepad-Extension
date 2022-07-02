@@ -2,7 +2,7 @@
 
 // list of the notes that are saved
 let notelist = [];
-// how many buttons were created
+// how many buttons were created, saves id
 let createdbuttons = 0;
 
 // current notepad element
@@ -10,7 +10,6 @@ let notepad = undefined;
 
 let leftcolumn = document.getElementById('notelist');
 let rightcolumn = document.getElementById('notebox');
-let addbutton = document.getElementById('addbutton');
 let namebox = document.getElementById('namebox');
 
 // initial get saved data
@@ -18,12 +17,12 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (sa
     if (saveddata.notelist_saved){
         notelist = JSON.parse(saveddata.notelist_saved);
         for (let i = 0; i < notelist.length; i++){
-            // create button, along with a delete that corresponds to it inside a new corresponding div
+            // create div for each button
             let newdiv = document.createElement('div');
             newdiv.type = 'div';
             newdiv.id = notelist[i].name + 'div';
             newdiv.className = 'totalbutton';
-            leftcolumn.insertBefore(newdiv,addbutton);
+            leftcolumn.appendChild(newdiv);
 
             // new button
             let button = document.createElement('button');
@@ -43,10 +42,12 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (sa
             rightcolumn.appendChild(note);
             notepad = note;
             // namebox title
+            namebox.style.color = 'black';
             namebox.innerHTML = notelist[0].displayname;
         }
     }
     if (saveddata.createdbuttons_saved){
+        // if saved data exists, then the amount of created buttons will get the saved data, to keep track of ids
         createdbuttons = saveddata.createdbuttons_saved;
     }
 })
@@ -63,15 +64,18 @@ document.addEventListener('keyup', function (e) {
             chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons}, () => {});
         }
         else if (e.target && e.target.id === namebox.id){
-            // if changing the title in the namebox, we need to update the note display name and the button name
-            let currenthtml = e.target.innerHTML;
-            // match the id of the current notepad with the one inside notelist
-            let noteindex = notelist.findIndex(x => x.name === notepad.id);
-            notelist[noteindex].displayname = currenthtml;
-            // find button corresponding to note
-            let button = document.getElementById(notepad.id + 'b');
-            button.innerHTML = currenthtml;
-            chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons}, () => {});
+            namebox.style.color = 'black';
+            if (notepad !== undefined){
+                // if changing the title in the namebox, we need to update the note display name and the button name
+                let currenthtml = e.target.innerHTML;
+                // match the id of the current notepad with the one inside notelist
+                let noteindex = notelist.findIndex(x => x.name === notepad.id);
+                notelist[noteindex].displayname = currenthtml;
+                // find button corresponding to note
+                let button = document.getElementById(notepad.id + 'b');
+                button.innerHTML = currenthtml;
+                chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons}, () => {});
+            }
         }
 });
 
@@ -82,7 +86,7 @@ document.addEventListener('click',function(e){
         newdiv.type = 'div';
         newdiv.id = createdbuttons + 'div';
         newdiv.className = 'totalbutton';
-        leftcolumn.insertBefore(newdiv,addbutton);
+        leftcolumn.appendChild(newdiv);
 
         // add the id of the new button
        // notebuttonlist.push(newdiv.id);
@@ -96,6 +100,7 @@ document.addEventListener('click',function(e){
         newdiv.appendChild(button);
 
         // create corresponding note
+        namebox.style.color = 'black';
         namebox.innerHTML = 'New Note';
         let note = document.createElement('div');
         note.className = 'note';
@@ -136,6 +141,7 @@ document.addEventListener('click',function(e){
         let noteget = notelist[notelist.findIndex(x => (x.name + 'b') === e.target.id)];
         let notehtml = noteget.notetext;
         let notename = noteget.name;
+        namebox.style.color = 'black';
         namebox.innerHTML = noteget.displayname;
         let note = document.createElement('div');
         note.className = 'note';
@@ -167,7 +173,11 @@ document.addEventListener('click',function(e){
             // delete the left column button corresponding to the notepad
             let div = document.getElementById(notepadid_temp + 'div');
             div.remove();
-            namebox.innerHTML = '';
+            namebox.style.color = 'grey';
+            if (notelist.length !== 0)
+                namebox.innerHTML = "Select a note..."
+            else
+                namebox.innerHTML = "Add a note..."
         }
     }
 });
