@@ -12,6 +12,21 @@ let leftcolumn = document.getElementById('notelist');
 let rightcolumn = document.getElementById('notebox');
 let namebox = document.getElementById('namebox');
 
+// set button focus function
+function buttonFocus(focused_button){
+    // reset focus on all other buttons
+    for (let i = 0; i < notelist.length; i++) {
+        // button
+        let button = document.getElementById(notelist[i].name + 'b');
+        button.style.borderRight = "none";
+        button.style.pointerEvents = "all";
+    }
+    // set the focus on one button
+    focused_button.style.borderRight = "7px solid #807e7e";
+    focused_button.style.pointerEvents = "none";
+
+}
+
 // initial get saved data
 chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (saveddata) {
     if (saveddata.notelist_saved){
@@ -137,8 +152,16 @@ document.addEventListener('click',function(e){
                 notelist = JSON.parse(saveddata.notelist_saved);
             }
         });
+
+        // button clicked
+        let buttondiv = document.getElementById(e.target.id);
+        // change focus
+        buttonFocus(buttondiv);
+
+
         // find the note that corresponds to the button id
         let noteget = notelist[notelist.findIndex(x => (x.name + 'b') === e.target.id)];
+
         let notehtml = noteget.notetext;
         let notename = noteget.name;
         namebox.style.color = 'black';
