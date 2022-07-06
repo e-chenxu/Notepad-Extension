@@ -24,11 +24,14 @@ function buttonFocus(focused_button){
     // set the focus on one button
     focused_button.style.borderRight = "7px solid #807e7e";
     focused_button.style.pointerEvents = "none";
-
+    // whenever buttonFocus is called, that means that a note was just swtiiched
+    // so we have to save what button we are on now, by saving the current notepad, only if it exists
+    if (notepad)
+        chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
 }
 
 // initial get saved data
-chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (saveddata) {
+chrome.storage.local.get(['notelist_saved','createdbuttons_saved', 'notepad_id_saved'], function (saveddata) {
     if (saveddata.notelist_saved){
         notelist = JSON.parse(saveddata.notelist_saved);
         for (let i = 0; i < notelist.length; i++){
@@ -48,17 +51,30 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved'], function (sa
             newdiv.appendChild(button);
         }
         if (notelist.length !== 0) {
-        // initial notepad is the first one
+        // using saved notepad id, find that id and use it as the note
+            let index = 0;
+            if (saveddata.notepad_id_saved) {
+                index = notelist.findIndex(x => (x.name) === saveddata.notepad_id_saved);
+            }
+            if (notelist[index] === undefined || index === -1){
+                index = 0;
+            }
             let note = document.createElement('div');
             note.className = 'note';
-            note.id = notelist[0].name;
-            note.innerHTML = notelist[0].notetext;
+            note.id = notelist[index].name;
+            note.innerHTML = notelist[index].notetext;
             note.contentEditable = 'true';
             rightcolumn.appendChild(note);
             notepad = note;
+
             // namebox title
             namebox.style.color = 'black';
-            namebox.innerHTML = notelist[0].displayname;
+            namebox.innerHTML = notelist[index].displayname;
+
+            // find the left column button corresponding to the notepad
+            let button = document.getElementById(note.id  + 'b');
+            button.focus();
+            buttonFocus(button);
         }
     }
     if (saveddata.createdbuttons_saved){
@@ -129,6 +145,9 @@ document.addEventListener('click',function(e){
         else {
             rightcolumn.appendChild(note);
         }
+        //scroll to add button
+        button.focus();
+
         notepad = note;
         notepad.focus();
         let note_object = {
@@ -141,8 +160,7 @@ document.addEventListener('click',function(e){
         createdbuttons++;
 
         // save data
-        chrome.storage.local.set({notelist_saved: JSON.stringify(notelist),createdbuttons_saved: createdbuttons}, () => {});
-
+        buttonFocus(button);
     }
     // if click on note button, then show the corresponding note
     else if(e.target && e.target.className === 'button'){
@@ -152,12 +170,6 @@ document.addEventListener('click',function(e){
                 notelist = JSON.parse(saveddata.notelist_saved);
             }
         });
-
-        // button clicked
-        let buttondiv = document.getElementById(e.target.id);
-        // change focus
-        buttonFocus(buttondiv);
-
 
         // find the note that corresponds to the button id
         let noteget = notelist[notelist.findIndex(x => (x.name + 'b') === e.target.id)];
@@ -181,18 +193,22 @@ document.addEventListener('click',function(e){
             rightcolumn.appendChild(note);
         }
         notepad = note;
+
+        // button clicked
+        let buttondiv = document.getElementById(e.target.id);
+        // change focus adn save
+        buttonFocus(buttondiv);
+
     }
     else if(e.target && notepad && e.target.className === 'deletebutton') {
         // if click on delete button, find the current notepad being used and delete it
         // also delete the button corresponding to the notepad
         // savea  temporary id because we ar edeleting
-        let notepadid_temp = notepad.id;
-        let index = notelist.findIndex(x => (x.name) ===  notepad.id);
-        notelist.splice(index,1);
-        chrome.storage.local.set({notelist_saved: JSON.stringify(notelist),createdbuttons_saved: createdbuttons}, () => {});
         if (notepad) {
+            let notepadid_temp = notepad.id;
+            let index = notelist.findIndex(x => (x.name) ===  notepad.id);
+            notelist.splice(index,1);
             rightcolumn.removeChild(notepad);
-            notepad = undefined;
             // delete the left column button corresponding to the notepad
             let div = document.getElementById(notepadid_temp + 'div');
             div.remove();
@@ -201,6 +217,8 @@ document.addEventListener('click',function(e){
                 namebox.innerHTML = "Select a note..."
             else
                 namebox.innerHTML = "Add a note..."
+            chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
+            notepad = undefined;
         }
     }
 });
