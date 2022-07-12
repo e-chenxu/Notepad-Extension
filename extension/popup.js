@@ -8,6 +8,7 @@ let createdbuttons = 0;
 // current notepad element
 let notepad = undefined;
 
+// get static elements
 let leftcolumn = document.getElementById('notelist');
 let rightcolumn = document.getElementById('notebox');
 let namebox = document.getElementById('namebox');
@@ -99,9 +100,11 @@ document.addEventListener('keyup', function (e) {
             if (notepad !== undefined){
                 // if changing the title in the namebox, we need to update the note display name and the button name
                 let currenthtml = e.target.innerHTML;
+
                 // match the id of the current notepad with the one inside notelist
                 let noteindex = notelist.findIndex(x => x.name === notepad.id);
                 notelist[noteindex].displayname = currenthtml;
+
                 // find button corresponding to note
                 let button = document.getElementById(notepad.id + 'b');
                 button.innerHTML = currenthtml;
@@ -145,11 +148,12 @@ document.addEventListener('click',function(e){
         else {
             rightcolumn.appendChild(note);
         }
-        //scroll to add button
-        button.focus();
 
+        //scroll to add button, focus on notepad
+        button.focus();
         notepad = note;
         notepad.focus();
+
         let note_object = {
             displayname: 'New Note',
             // basically the id or internal name, i didnt want to name it id because html is named id
@@ -173,21 +177,23 @@ document.addEventListener('click',function(e){
 
         // find the note that corresponds to the button id
         let noteget = notelist[notelist.findIndex(x => (x.name + 'b') === e.target.id)];
-
         let notehtml = noteget.notetext;
         let notename = noteget.name;
         namebox.style.color = 'black';
         namebox.innerHTML = noteget.displayname;
+
         let note = document.createElement('div');
         note.className = 'note';
         note.id = notename;
         note.innerHTML = notehtml;
         note.contentEditable = 'true';
+
         // replace the current note with the new note
         // if notepad exists, replace it
         if (notepad) {
             rightcolumn.replaceChild(note, notepad);
         }
+
         // otherwise just add it to the blank thing
         else {
             rightcolumn.appendChild(note);
@@ -205,18 +211,23 @@ document.addEventListener('click',function(e){
         // also delete the button corresponding to the notepad
         // savea  temporary id because we ar edeleting
         if (notepad) {
+            // remove notepad from list and column
             let notepadid_temp = notepad.id;
             let index = notelist.findIndex(x => (x.name) ===  notepad.id);
             notelist.splice(index,1);
             rightcolumn.removeChild(notepad);
+
             // delete the left column button corresponding to the notepad
             let div = document.getElementById(notepadid_temp + 'div');
             div.remove();
+
+            // change namebox
             namebox.style.color = 'grey';
             if (notelist.length !== 0)
                 namebox.innerHTML = "Select a note..."
             else
                 namebox.innerHTML = "Add a note..."
+
             chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
             notepad = undefined;
         }
