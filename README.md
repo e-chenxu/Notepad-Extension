@@ -2,11 +2,18 @@
 
 Google Chrome extension that allows you to write notes.
 
+<img src="images/main.PNG" width="200">
 
-Functionality finished.
-Design needed.
-Also cleaner code.
+# How to Install
 
-Stuff I might want to do:
-- dark mode
-- save what note your on when you exit and come back
+1. Download and unzip
+2. Go to chrome://extensions/ and turn on developer mode
+3. Press load unpacked on the top left and click on the extensions folder
+
+# How to Use
+
+Add a note and start writing!
+
+Notes will automatically save as you write.
+
+You can delete notes using the trash button on the top right corner, and you can rename notes by clicking the text box on top.
