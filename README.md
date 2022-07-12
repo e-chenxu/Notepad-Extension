@@ -2,7 +2,7 @@
 
 Google Chrome extension that allows you to write notes.
 
-<img src="images/main.PNG" width="200">
+<img src="images/notepad.png" width="500">
 
 # How to Install
 
