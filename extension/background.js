@@ -1,14 +1,13 @@
-/*chrome.runtime.onInstalled.addEventListener()(function () {
-    const item = {
-        notepad: 'Welcome to <b>Chrome Notepad</b>!&nbsp;<div><br></div><div><b><u>COMMANDS</u></b>:</div><div>- Ctrl+B for <b>bold</b></div><div>- Ctrl+U for <u>underline</u><br></div><div>- Ctrl+I for&nbsp;<i>italic</i></div><div><br></div><div>Text will be automatically saved every time a key is pressed.</div>',
-        text: 'black',
-        background: 'yellow'
-    };
-    chrome.storage.local.set(item, function () {
-        console.log("Notepad initialized", item);
-    });
-    console.log("bruh");
-    currentnotepad = "note1";
-});*/
+chrome.runtime.onInstalled.addEventListener()(function () {
+    // initialize save
+    // list of the notes that are saved
+    let i_notelist = [];
+// how many buttons were created, saves id
+    let i_createdbuttons = 0;
 
-// chrome runtime on click new note tab
+// current notepad element
+    let i_notepad = undefined;
+
+    chrome.storage.local.set({ notelist_saved: JSON.stringify(i_notelist), createdbuttons_saved: i_createdbuttons, notepad_id_saved: i_notepad.id}, () => {});
+
+});
