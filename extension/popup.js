@@ -44,8 +44,6 @@ function addNote(note_id, note_text, note_title){
     note.id = note_id;
     note.innerHTML = note_text;
     note.contentEditable = 'true';
-    rightcolumn.appendChild(note);
-    notepad = note;
 
     // namebox title
     namebox.style.color = 'black';
@@ -69,11 +67,13 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved', 'notepad_id_s
             if (notelist[index] === undefined || index === -1){
                 index = 0;
             }
-            addNote(notelist[index].name_id, notelist[index].notetext, notelist[index].displayname);
-
+            let note = addNote(notelist[index].name_id, notelist[index].notetext, notelist[index].displayname);
+            rightcolumn.appendChild(note);
+            notepad = note;
             // find the left column button corresponding to the notepad
             let button = document.getElementById(notepad.id  + 'b');
             button.focus();
+
             buttonFocus(button);
         }
     }
@@ -122,11 +122,13 @@ document.addEventListener('click',function(e){
         else {
             rightcolumn.appendChild(note);
         }
+        notepad = note;
         button.focus();
-        buttonFocus(button);
         notepad.focus();
         notelist.push(note_object);
         createdbuttons++;
+
+        buttonFocus(button);
     }
     // if click on note button, then show the corresponding note
     else if(e.target && e.target.className === 'button'){
@@ -138,13 +140,14 @@ document.addEventListener('click',function(e){
         });
         // find the note that corresponds to the button id
         let noteget = notelist[notelist.findIndex(x => (x.name_id + 'b') === e.target.id)];
-        let note = addNote(noteget.name_id, noteget.notetext, noteget.displayname)
+        let note = addNote(noteget.name_id, noteget.notetext, noteget.displayname);
         if (notepad) {
             rightcolumn.replaceChild(note, notepad);
         }
         else {
             rightcolumn.appendChild(note);
         }
+        notepad = note;
         // button clicked
         let buttondiv = document.getElementById(e.target.id);
         buttonFocus(buttondiv);
