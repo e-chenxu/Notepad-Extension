@@ -42,7 +42,7 @@ img {
     clear: both;
 }
 
-/* button stuff */
+/* buttons */
 
 .button{
     background: white;
@@ -90,6 +90,8 @@ img {
 .addbuttonicon{
     float: left;
 }
+
+/* menu */
 
 .menubar{
     position: relative;
