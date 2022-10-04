@@ -16,8 +16,7 @@ function buttonFocus(focused_button){
     }
     focused_button.style.borderRight = "7px solid #807e7e";
     focused_button.style.pointerEvents = "none";
-    if (notepad)
-        chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
+    chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
 }
 
 
@@ -127,7 +126,7 @@ document.addEventListener('click',function(e){
         notepad.focus();
         notelist.push(note_object);
         createdbuttons++;
-
+        chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
         buttonFocus(button);
     }
     // if click on note button, then show the corresponding note
