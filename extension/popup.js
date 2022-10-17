@@ -6,8 +6,6 @@ let notepad = undefined;     // current notepad element
 let leftcolumn = document.getElementById('notelist');   // buttons and notes
 let rightcolumn = document.getElementById('notebox');
 let namebox = document.getElementById('namebox');       // title
-let justloaded = 0;
-let justadded = 0;
 
 /* highlight button, and also save everything */
 function buttonFocus(focused_button){
@@ -81,10 +79,7 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved', 'notepad_id_s
     if (saveddata.createdbuttons_saved){
         createdbuttons = saveddata.createdbuttons_saved;
     }
-    justloaded = 1;
 })
-
-
 
 document.addEventListener('keyup', function (e) {
         if (e.target && e.target.id === notepad.id){
@@ -110,12 +105,7 @@ document.addEventListener('keyup', function (e) {
 });
 
 document.addEventListener('click',function(e){
-    while (justloaded === 0 || justadded === 1){
-        // do nothing
-    }
-
     if(e.target && e.target.id === 'addnote'){
-        justadded = 1;
         // we use createdbuttons to keep track of ids
         // it will increment each time a new button is created
         let button = addButton(createdbuttons + 'div', createdbuttons + 'b', 'New Note');
@@ -136,9 +126,8 @@ document.addEventListener('click',function(e){
         notepad.focus();
         notelist.push(note_object);
         createdbuttons++;
-
+        chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
         buttonFocus(button);
-        justadded = 0;
     }
     // if click on note button, then show the corresponding note
     else if(e.target && e.target.className === 'button'){
