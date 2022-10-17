@@ -108,6 +108,7 @@ document.addEventListener('click',function(e){
     if(e.target && e.target.id === 'addnote'){
         // we use createdbuttons to keep track of ids
         // it will increment each time a new button is created
+        createdbuttons++;
         let button = addButton(createdbuttons + 'div', createdbuttons + 'b', 'New Note');
         let note = addNote(createdbuttons, "", 'New Note');
         let note_object = {
@@ -125,7 +126,6 @@ document.addEventListener('click',function(e){
         button.focus();
         notepad.focus();
         notelist.push(note_object);
-        createdbuttons++;
         chrome.storage.local.set({ notelist_saved: JSON.stringify(notelist), createdbuttons_saved: createdbuttons, notepad_id_saved: notepad.id}, () => {});
         buttonFocus(button);
     }
