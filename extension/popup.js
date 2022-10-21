@@ -52,6 +52,9 @@ function addNote(note_id, note_text, note_title){
 
 
 chrome.storage.local.get(['notelist_saved','createdbuttons_saved', 'notepad_id_saved'], function (saveddata) {
+    if (saveddata.createdbuttons_saved){
+        createdbuttons = saveddata.createdbuttons_saved;
+    }
     if (saveddata.notelist_saved){
         notelist = JSON.parse(saveddata.notelist_saved);
         for (let i = 0; i < notelist.length; i++){
@@ -75,9 +78,6 @@ chrome.storage.local.get(['notelist_saved','createdbuttons_saved', 'notepad_id_s
 
             buttonFocus(button);
         }
-    }
-    if (saveddata.createdbuttons_saved){
-        createdbuttons = saveddata.createdbuttons_saved;
     }
 })
 
@@ -109,7 +109,7 @@ document.addEventListener('click',function(e){
         // we use createdbuttons to keep track of ids
         // it will increment each time a new button is created
         createdbuttons++;
-        let button = addButton(createdbuttons + 'div', createdbuttons + 'b', 'New Note');
+        addButton(createdbuttons + 'div', createdbuttons + 'b', 'New Note');
         let note = addNote(createdbuttons, "", 'New Note');
         let note_object = {
             displayname: 'New Note',
@@ -123,6 +123,7 @@ document.addEventListener('click',function(e){
             rightcolumn.appendChild(note);
         }
         notepad = note;
+        let button = document.getElementById(notepad.id  + 'b');
         button.focus();
         notepad.focus();
         notelist.push(note_object);
